@@ -1,0 +1,7 @@
+Please goto HR Reprts.xlsx to view the graph
+
+1- first sheet is about "Salespeople Dashboard"
+	- Sales Peaple without attrition = 79%
+	- Sales Peaple with attrition    = 21%
+
+2- Secound sheet is Monthly Income Histogram
