@@ -1,0 +1,168 @@
+			  Data Aggregation Activity
+			-----------------------------
+			Human Resources Analysis Data
+			-----------------------------
+
+
+#-----------------------------------------------------
+#Create table shows how many salespeople have attrition.
+#Store this information in a column called “attrition”.
+
+
+CREATE TABLE Attrition_Salespeople (attrition BIGINT);
+
+INSERT OVERWRITE TABLE Attrition_Salespeople
+	SELECT COUNT(Attrition)
+	FROM employee 
+	WHERE Attrition LIKE "%Yes%" OR  Attrition LIKE "%yes%";
+
+SELECT attrition AS Attrition_Salespeople_Num FROM Attrition_Salespeople;
+#-----------------------------------------------------
+
+
+
+
+
+#-----------------------------------------------------
+#Create table counts how many salespeople have no attrition.
+#Store this information in a column called “Non Attrition”.
+
+
+CREATE TABLE Non_Attrition_Salespeople (Non_Attrition BIGINT);
+
+INSERT OVERWRITE TABLE Non_Attrition_Salespeople
+	SELECT COUNT(Attrition) 
+	FROM employee 
+	WHERE Attrition LIKE "%No%" OR  Attrition LIKE "%no%";
+
+SELECT Non_Attrition AS Non_Attrition_Salespeople_Num FROM Non_Attrition_Salespeople;
+#-----------------------------------------------------
+
+
+
+
+
+#-----------------------------------------------------
+#Create statistics tables (average, min, max) showing the monthly income for all salespeople.
+#label the columns “average_monthly_income”, “min_monthly_income”, and “max_monthly_income”.
+
+CREATE TABLE All_Monthly_Income
+(
+	average_monthly_income DOUBLE,
+	min_monthly_income DOUBLE,
+	max_monthly_income DOUBLE
+);
+
+INSERT OVERWRITE TABLE All_Monthly_Income
+	SELECT 
+		AVG(MonthlyIncome), 
+		MIN(MonthlyIncome), 
+		MAX(MonthlyIncome) 
+	FROM employee;
+
+SELECT 	ROUND(average_monthly_income) AS Average_Monthly_Income , 
+	ROUND(min_monthly_income) AS Min_Monthly_Income,
+	ROUND(max_monthly_income) AS Max_Monthly_Income
+FROM All_Monthly_Income;
+#-----------------------------------------------------
+
+
+
+
+#-----------------------------------------------------
+#Create statistics tables (average, min, max) showing the monthly income for those with attrition.
+#label the columns “average_monthly_income”, “min_monthly_income”, and “max_monthly_income”.
+
+CREATE TABLE Attrition_Monthly_Income
+(
+	average_monthly_income DOUBLE,
+	min_monthly_income DOUBLE,
+	max_monthly_income DOUBLE
+);
+
+INSERT OVERWRITE TABLE Attrition_Monthly_Income
+	SELECT 
+		AVG(MonthlyIncome), 
+		MIN(MonthlyIncome), 
+		MAX(MonthlyIncome) 
+	FROM employee 
+	WHERE Attrition LIKE "%Yes%" OR  Attrition LIKE "%yes%";
+
+SELECT 	ROUND(average_monthly_income) AS Average_Attrition_Monthly_Income , 
+	min_monthly_income AS Min_Attrition_Monthly_Income,
+	max_monthly_income AS Max_Attrition_Monthly_Income
+FROM Attrition_Monthly_Income;
+#-----------------------------------------------------
+
+
+
+
+#-----------------------------------------------------
+#Create statistics tables (average, min, max) showing the monthly income for those without attrition.
+#label the columns “average_monthly_income”, “min_monthly_income”, and “max_monthly_income”.
+
+CREATE TABLE Non_Attrition_Monthly_Income
+(
+	average_monthly_income DOUBLE,
+	min_monthly_income DOUBLE,
+	max_monthly_income DOUBLE
+);
+
+INSERT OVERWRITE TABLE Non_Attrition_Monthly_Income
+	SELECT 	AVG(MonthlyIncome), 
+		MIN(MonthlyIncome), 
+		MAX(MonthlyIncome) 
+	FROM employee 
+	WHERE Attrition LIKE "%No%" OR  Attrition LIKE "%no%";
+
+SELECT 	ROUND(average_monthly_income) AS Average_Attrition_Monthly_Income , 
+	min_monthly_income AS Min_Attrition_Monthly_Income,
+	max_monthly_income AS Max_Attrition_Monthly_Income
+FROM Non_Attrition_Monthly_Income;
+#-----------------------------------------------------
+
+
+
+
+#-----------------------------------------------------
+#Create table containing the monthly income and count of salespeople making that monthly income for salespeople with attrition.
+Label the columns as: “monthlyincome” and “count”
+
+CREATE TABLE Attrition_Monthly_Income_and_Count
+(
+	count BIGINT,
+	monthlyincome DOUBLE
+);
+
+INSERT OVERWRITE TABLE Attrition_Monthly_Income_and_Count
+	SELECT 
+		COUNT(MonthlyIncome), 
+		SUM(MonthlyIncome) 
+	FROM employee 
+	WHERE Attrition LIKE "%Yes%" OR  Attrition LIKE "%yes%";
+
+SELECT * FROM Attrition_Monthly_Income_and_Count;
+
+#-----------------------------------------------------
+
+
+
+#-----------------------------------------------------
+#Create table containing the monthly income and count of salespeople making that monthly income for salespeople without attrition.
+#Label the columns as: “monthlyincome” and “count”
+
+CREATE TABLE Non_Attrition_Monthly_Income_and_Count
+(
+	count BIGINT,
+	monthlyincome DOUBLE
+);
+
+INSERT OVERWRITE TABLE Non_Attrition_Monthly_Income_and_Count
+	SELECT 
+		COUNT(MonthlyIncome), 
+		SUM(MonthlyIncome) 
+	FROM employee 
+	WHERE Attrition LIKE "%No%" OR  Attrition LIKE "%no%";
+
+SELECT * FROM Non_Attrition_Monthly_Income_and_Count;
+#-----------------------------------------------------
