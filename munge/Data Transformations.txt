@@ -1,0 +1,45 @@
+		   Data Transform Activity
+		-----------------------------
+		Human Resources Analysis Data
+		-----------------------------
+
+#----------------------------------------------
+#	a) Create a new table for your analysis called “employee_sales”.  
+#	b)	Load the table “employee” into this table.
+#	c) Select these columns: Attrition, Department, JobSatisfaction & MonthlyIncome. 
+
+CREATE TABLE employee_sales
+( 
+	Attrition string, 
+	Department string, 
+	JobSatisfaction int, 
+	MonthlyIncome int 
+);
+
+SELECT * FROM employee_sales LIMIT 10;
+#-----------------------------------------------
+
+
+
+
+#-----------------------------------------------
+#Round the data found in the “MonthlyIncome” column to the nearest $1000.
+#Filter the data to only look at those items in the “Sales Department”.
+#Order the data by “JobSatisfaction” from highest to lowest. 
+
+INSERT OVERWRITE TABLE employee_sales
+	SELECT 	Attrition, 
+		Department, 
+		JobSatisfaction, 
+		ROUND(MonthlyIncome, -3) AS Monthly_Incom_Rnd 
+	FROM employee
+	Where Department LIKE "%Sales%" OR Department LIKE "%sales%"
+	ORDER BY JobSatisfaction DESC;
+#-----------------------------------------------
+
+
+
+
+#-----------------------------------------------
+Select * from employee_sles ; 
+#-----------------------------------------------
